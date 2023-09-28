@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email verification</title>
     <style>
         body{
@@ -45,6 +45,9 @@
             color: white;
             margin-top: 10px;
         }
+        #btn{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -52,22 +55,24 @@
         <div class="icon">
             <span id="statusIcon" class=""></span>
         </div>
-        <div id="statusMessage"></div>
+        <div id="statusMessage" class=""></div>
         <!-- replace http://localhost:3000 with your domain name(url) -->
-        <a href="http://localhost:3000/login" class="hideBtn" id="btn">Login</a>
+        <a href="http://localhost:3000/login" class="" id="btn">Login</a>
     </div>
-    <script>
-        const urlParams =new URLSearchParams(window.location.search);
-        const message = urlParams.get( 'message' );
-        const status = urlParams.get( 'status' );
+    <script >
+         // get the message parameter form url
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        const status = urlParams.get('status');
 
+        //get the card, status icon, status message and button
         const card = document.querySelector('.card');
         const statusIcon = document.getElementById('statusIcon');
         const statusMessage = document.getElementById('statusMessage');
         const btn = document.getElementById('btn');
 
         if(status === 'success'){
-            statusIcon.innerHTML = '✅';
+            statusIcon.innerHTML = 'hogya';
             // card.style.backgroundColor = 'rgb(0, 255, 0, 0.2)';
             statusMessage.textContent = message;
             // statusMessage.innerHTML = message;
@@ -82,7 +87,7 @@
             // statusMessage.innerHTML = message;
             // btn.classList.remove('hideBtn');
             // btn.classList.add('showBtn');
-            statusIcon.innerHTML = '❌';
+            statusIcon.innerHTML = 'nahi hua';
             statusMessage.textContent = message;
             card.classList.add('error');
             statusIcon.classList.add('error');

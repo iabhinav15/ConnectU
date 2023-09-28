@@ -1,5 +1,5 @@
 import {User} from '../models/userModel.js';
-import { hashString } from '../utils/index.js';
+import { createJWT, hashString } from '../utils/index.js';
 import { sendVerificationEmail } from '../utils/sendEmail.js';
 import { compareString } from '../utils/index.js';
 
