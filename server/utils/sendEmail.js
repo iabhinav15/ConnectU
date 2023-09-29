@@ -64,7 +64,7 @@ export const sendVerificationEmail = async (user, res) => {
 export const resetPasswordLink = async (user, res) => {
     const {_id, email, lastName} = user;
     const token = _id + uuidv4();
-    const link = APP_URL + "/users/reset-password/" + _id + "/" + token;
+    const link = 'http://localhost:3000' + "/reset-password/" + _id + "/" + token;
 
     //mail options
     const mailOptions = {

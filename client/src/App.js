@@ -1,6 +1,6 @@
 import React from 'react';
 import {Outlet,  Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import {Home, Login, Profile, Register, ResetPassword } from './pages';
+import {EnternewPassword, Home, Login, NotFound, Profile, Register, ResetPassword } from './pages';
 import { useSelector } from 'react-redux';
 
 
@@ -27,7 +27,8 @@ function App() {
         <Route path='/register' element={<Register />}/>
         <Route path='/login' element={<Login />}/>
         <Route path='/reset-password' element={<ResetPassword />}/>
-        {/* <Route path='*' element={<NotFound />}/> */}
+        <Route path='reset-password/:userId/:token' element={<EnternewPassword/>}/>
+        <Route path='*' element={<NotFound />}/>
 
       </Routes>
     </div>

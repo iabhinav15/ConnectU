@@ -13,9 +13,6 @@ router.post('/reset-password', changePassword);
 router.get('/verified', (req, res)=>{
     res.sendFile(path.join(__dirname, './views/build', 'index.html'));
 })
-//need to create reset password page in views/build
-router.get('/resetpassword', (req, res)=>{
-    res.sendFile(path.join(__dirname, './views/build', 'resetpass.html'));
-})
+
 
 export default router;
