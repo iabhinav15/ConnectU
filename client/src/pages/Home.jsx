@@ -79,7 +79,7 @@ const Home = () => {
       console.log(error)
     }
   };
-  //not getting any suggested friend
+ 
   const fetchSuggestedFriends = async () => {
     try {
       const res = await apiRequest({
