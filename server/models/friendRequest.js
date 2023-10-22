@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const requestSchema = new mongoose.Schema({
     requestTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "User"
     },
     requestFrom: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "User"
     },
     requestStatus: {
         type: String,

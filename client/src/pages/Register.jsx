@@ -8,6 +8,7 @@ import { NoProfile, BgImage } from '../assets'
 import { BsShare } from 'react-icons/bs'
 import { ImConnection } from 'react-icons/im'
 import { AiOutlineInteraction } from 'react-icons/ai'
+import { apiRequest } from '../utils'
 
 const Register = () => {
   const { register, handleSubmit, getValues, formState: { errors } } = useForm({mode:'onChange'});
@@ -16,6 +17,28 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: '/auth/register',
+        data: data,
+        method: 'POST',
+      })  
+
+      if(res?.status === 'failed'){
+        setErrMsg(res);
+      }
+      else{
+        setTimeout(() => {
+          window.location.replace('/login');
+        }, 1000);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    finally{
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -73,7 +96,7 @@ const Register = () => {
             </div>
 
           {
-            errMsg?.message && (<span className={`text-sm ${errMsg?.status=='failed' ? 'text-[#f64949fe]' :'text-[#2ba150fe]' }`}>{errMsg?.message}</span>)
+            errMsg?.message && (<span className={`text-sm ${errMsg?.status==='failed' ? 'text-[#f64949fe]' :'text-[#2ba150fe]' }`}>{errMsg?.message}</span>)
           }
           {
             isSubmitting ? <Loading /> : <CustomButton type='submit' containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none `} title='Create Account'/>

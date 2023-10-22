@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const postSchema = new mongoose.Schema({
     userId: {
         type: Schema.Types.ObjectId,
-        ref: "Users" 
+        ref: "User" 
     },  
     description: {
         type: String,
@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema({
         type: String,
     },
     likes: [{type: String} ],
-    comments: [{type: Schema.Types.ObjectId, ref:"Comments"}],
+    comments: [{type: Schema.Types.ObjectId, ref:"Comment"}],
     },
     { timestamps: true }
 );

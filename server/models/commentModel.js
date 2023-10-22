@@ -3,11 +3,11 @@ import mongoose, {Schema} from "mongoose";
 const commentSchema = new mongoose.Schema({
     userId: {
         type: Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "User"
     },
     postId: {
         type: Schema.Types.ObjectId,
-        ref: "Posts"
+        ref: "Post"
     },
     comment: {
         type: String,
@@ -24,7 +24,7 @@ const commentSchema = new mongoose.Schema({
             },
             userId: {
                 type: Schema.Types.ObjectId,
-                ref: "Users"
+                ref: "User"
             },
             from: {
                 type: String,

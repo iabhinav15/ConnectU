@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { TbSocial } from 'react-icons/tb'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { TextInput, Loading, CustomButton } from '../components'
@@ -8,6 +8,8 @@ import { BgImage } from '../assets'
 import { BsShare } from 'react-icons/bs'
 import { ImConnection } from 'react-icons/im'
 import { AiOutlineInteraction } from 'react-icons/ai'
+import { apiRequest } from '../utils'
+import { UserLogin } from '../redux/userSlice'
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({mode:'onChange'});
@@ -16,7 +18,28 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: '/auth/login',
+        data: data,
+        method: 'POST',
+      })
 
+      if(res?.status === 'failed'){
+        setErrMsg(res);
+      } else{
+        setErrMsg("");
+        const newData = { token: res?.token, ...res?.user };
+        // dispatch({ type: 'LOGIN', payload: newData });
+        dispatch(UserLogin(newData));
+        window.location.replace('/');
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
   }
 
   return (

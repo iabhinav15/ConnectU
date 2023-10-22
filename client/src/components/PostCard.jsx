@@ -7,6 +7,22 @@ import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 import { CustomButton, Loading, TextInput } from './index';
 import { postComments } from '../assets/data';
+import { apiRequest } from '../utils';
+import { useSelector } from 'react-redux';
+
+const getPostComments = async (id,token) => {
+    try {
+        const res = await apiRequest({
+            url: "/posts/comments/" + id,
+            method: "GET",
+            token
+        });
+        return res?.data;
+    } catch (error) {
+        console.log(error);
+    }
+        
+}
 
 const ReplyCard = ({ reply, user, handleLike}) => {
     
@@ -45,7 +61,39 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const { register, handleSubmit, reset, formState:{errors} } = useForm({mode: "onChange"});
-    const onSubmit = async(data) =>{};
+
+    const onSubmit = async(data) =>{
+        setLoading(true);
+        setErrMsg("");
+        try {
+            const URL = !replyAt ? "/posts/comment/" + id : "/posts/reply-comment/" + id;
+            const newData = {
+                comment: data?.comment,
+                from: user?.firstName + " " + user?.lastName,
+                replyAt: replyAt,
+            };
+            const res = await apiRequest({
+                url: URL,
+                data: newData,
+                token: user?.token,
+                method: "POST",
+            });
+            if(res?.status === "failed"){
+                setErrMsg(res);
+            } else {
+                reset({
+                    comment: "",
+                });
+                setErrMsg("");
+                await getComments();
+            }
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
+
     return (
         <form className='w-full border-b border-[#66666645]' onSubmit={handleSubmit(onSubmit)}>
             <div className='w-full flex items-center gap-2 py-4'>
@@ -75,13 +123,19 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
     const [loading, setLoading] = useState(false);
     const [replyComments, setReplyComments] = useState(0);
     const [showComments, setshowComments] = useState(0);
-    const getComments = async () => {
-        setReplyComments(0);
+    const {user:userData} = useSelector(state => state.user);
 
-        setComments(postComments);
+    const getComments = async (id) => {
+        setReplyComments(0);
+        const result = await getPostComments(id,userData.token);
+        setComments(result);
+        console.log(result)
         setLoading(false);
     };
-    const handleLike = async () => {};
+    const handleLike = async (uri) => {
+        await likePost(uri);
+        await getComments(post?._id);
+    };
     return (
         <div className='mb-2 bg-primary p-4 rounded-xl'>
             <div className='flex gap-3 items-center mb-2'>
@@ -125,7 +179,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                 }
             </div>
             <div className='flex justify-between items-center mt-4 px-3 py-2 text-ascent-2 text-base border-t border-[#66666645]'>
-                <p className='flex gap-1 items-center text-base cursor-pointer'>
+                <p className='flex gap-1 items-center text-base cursor-pointer'  onClick={()=> handleLike("/posts/like/"+post?._id)}>
                     {
                         post?.likes?.includes(user?._id) ? (
                             <BiSolidLike size={20} color='blue' />
@@ -140,7 +194,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                     {post?.comments?.length ?? 0} Comments
                 </p>
                 {
-                    post?.userId?._id === user?._id && (
+                     user?._id === post?.userId?._id  && (
                     <div className='flex gap-1 items-center text-base text-ascent-1 cursor-pointer' onClick={()=>deletePost(post?._id)}>
                         <MdOutlineDeleteOutline size={20} />
                         <span>Delete</span>
@@ -176,7 +230,9 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                                             {comment?.comment}
                                         </p>
                                         <div className='mt-2 flex gap-6'>
-                                            <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>
+                                            <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer' 
+                                            onClick={()=>{handleLike("/posts/like-comment/" + comment?._id)}}
+                                                >
                                                 {
                                                     comment?.likes?.includes(user?._id) ? (<BiSolidLike size={20} color='blue'/>) : (<BiLike size={20}/>)
                                                 }

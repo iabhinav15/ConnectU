@@ -40,10 +40,10 @@ export const login = async (req, res, next) => {
         }
         const user = await User.findOne({ email }).select("+password").populate({
             path: "friends",
-            select: "firstName lastName location profileUrl -password",
+            select: "firstName lastName location profileUrl",
         });
         if (!user) {
-            return next("Invalid credentials");
+            return next("Invalid credentials1");
         }
         //check if user email is verified
         if (!user?.verified) {
