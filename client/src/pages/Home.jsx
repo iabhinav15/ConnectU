@@ -96,7 +96,7 @@ const Home = () => {
     try {
       const res = await sendFriendRequest(user.token, id);
       await fetchSuggestedFriends();
-      
+      alert("friend request sent");
     } catch (error) {
       console.log(error)
     }

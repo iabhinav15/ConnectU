@@ -140,7 +140,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
         <div className='mb-2 bg-primary p-4 rounded-xl'>
             <div className='flex gap-3 items-center mb-2'>
                 <Link to={`/profile/${post?.userId?._id}`} className='w-10 h-10 rounded-full overflow-hidden'>
-                    <img src={post?.userId?.profileUrl ?? NoProfile} alt={post?.userId?.firstName} className='w-14 h-14 object-cover rounded-full' />
+                    <img src={post?.userId?.profileUrl ?? NoProfile} alt={post?.userId?.firstName} className='w-12 h-12 md:w-14 md:h-14 object-cover rounded-full' />
                 </Link>
                 <div className='w-full flex justify-between'>
                     <div className=''>
@@ -150,9 +150,12 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                             </p>
                         </Link>
                         <span className='text-ascent-2'> {post?.userId?.location}</span>
+                        <span className='md:hidden flex text-ascent-2 text-xs'>
+                        {moment(post?.createdAt ?? "2023.05.25").fromNow()}
+                    </span>
                     </div>
-                    <span className='text-ascent-2'>
-                        {moment(post?.createdAt ?? "2023.06.25").fromNow()}
+                    <span className='hidden md:flex text-ascent-2'>
+                        {moment(post?.createdAt ?? "2023.05.25").fromNow()}
                     </span>
                 </div>
             </div>

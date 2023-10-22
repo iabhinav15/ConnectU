@@ -9,6 +9,7 @@ import { BsMoon, BsSunFill } from 'react-icons/bs';
 import {IoMdNotificationsOutline} from 'react-icons/io';
 import { SetTheme } from '../redux/theme';
 import {Logout} from '../redux/userSlice'
+import { fetchPosts } from '../utils';
 
 const TopBar = () => {
   const {theme} = useSelector(state => state.theme);
@@ -19,7 +20,9 @@ const TopBar = () => {
     const themeValue = theme === 'light' ? 'dark' : 'light';
     dispatch(SetTheme(themeValue));
   }
-  const handleSearch = async (data) => {};
+  const handleSearch = async (data) => {
+    await fetchPosts(user.token, dispatch, "", data);
+  };
   return (
     <div className='topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary'>
       <Link to='/' className='flex gap-2 items-center'>
