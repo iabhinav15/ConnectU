@@ -350,6 +350,31 @@ export const acceptRequest = async (req, res, next) => {
     }
 };
 
+export const removeFriend = async (req, res)=>{
+    try {
+        const {userId} = req.body.user;
+        const {id} = req.body;
+        const user = await User.findById(userId);
+        const friend = await User.findById(id);
+        user.friends.pull(id);
+        friend.friends.pull(userId);
+        await user.save();
+        await friend.save();
+        //write code to delete friendrequest data
+        res.status(201).json({
+            success: true,
+            message: "Friend removed successfully.",
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "auth error",
+            success: false,
+            error: error.message
+        })
+    }
+}
+
 export const profileViews = async (req, res, next) => {
     try {
         const {userId} = req.body.user;

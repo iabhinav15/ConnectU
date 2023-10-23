@@ -2,13 +2,29 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { NoProfile } from '../assets'
 import { BsPersonFillDash } from 'react-icons/bs'
+import { apiRequest } from '../utils'
+import { useSelector } from 'react-redux'
 
 const FriendsCard = ({friends}) => {
 
-  const handleRemoveFriend = () => {
-    // console.log('friend removed');
-    // alert("It does not work as of now, Work in progress")
-    
+  const {userId} = useSelector(state => state.user.user)
+  const {user} = useSelector(state => state.user)
+
+  const handleRemoveFriend = async (friendId) => {
+    try {
+      const res = window.confirm("Are you sure you want to remove this friend?")
+      if (res) {
+        const res = await apiRequest({
+          url: "/users/remove-friend",
+          token: user?.token,
+          method: "POST",
+          data: { id: friendId, userId: userId },
+        });
+        alert("Friend removed, Please refresh the page")
+      }
+    } catch (error) {
+      console.log(error);
+    } 
   }
 
   return (
@@ -29,7 +45,7 @@ const FriendsCard = ({friends}) => {
               </div>
               </Link>
               <div className='flex gap-1'>
-                <button className='text-sm text-white p-1 rounded bg-[#0444a430]' onClick={handleRemoveFriend}>
+                <button className='text-sm text-white p-1 rounded bg-[#0444a430]' onClick={()=>handleRemoveFriend(friend._id)}>
                   <BsPersonFillDash size={20} className='text-[#0f52b6]'/>
                 </button>
               </div>

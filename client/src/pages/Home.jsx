@@ -64,8 +64,10 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     await deletePost(id, user.token);
+    alert("post deleted");
     await fetchPost();
   }; 
+  
   const fetchFriendRequests = async () => {
     try {
       const res = await apiRequest({
