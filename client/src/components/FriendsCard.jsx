@@ -6,8 +6,9 @@ import { BsPersonFillDash } from 'react-icons/bs'
 const FriendsCard = ({friends}) => {
 
   const handleRemoveFriend = () => {
-    console.log('friend removed');
-    alert("It does not work as of now, Work in progress")
+    // console.log('friend removed');
+    // alert("It does not work as of now, Work in progress")
+    
   }
 
   return (

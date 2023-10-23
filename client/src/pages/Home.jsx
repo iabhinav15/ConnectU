@@ -111,7 +111,8 @@ const Home = () => {
       setFriendRequest(res?.data);
       if(status!=='Denied'){
         dispatch(AddFriend(res?.friend));
-      }
+      } 
+      
     } catch (error) {
       console.log(error)
     }

@@ -22,7 +22,7 @@ const userSlice = createSlice({
         },
         addFriend: (state,action) => {
             state.user.friends.push(action.payload);
-        }
+        } 
     }
 });
 

@@ -305,7 +305,7 @@ export const getFriendRequest = async (req, res) => {
 
 export const acceptRequest = async (req, res, next) => {
     try {
-        const id = req.body.user.userId;
+        const id = req.body.user.userId;        
         const { rid, status } = req.body;//rid = request id
         const requestExist = await FriendRequest.findById(rid);
 
@@ -314,13 +314,13 @@ export const acceptRequest = async (req, res, next) => {
             return;
         }
         const newRes = await FriendRequest.findByIdAndUpdate({_id: rid}, {requestStatus: status}, {new: true});
-
+        console.log(newRes);
         if(status === "Accepted"){
             const user = await User.findById(id);
             user.friends.push(newRes?.requestFrom);
             await user.save();
             const friend = await User.findById(newRes?.requestFrom);
-            friend.friends.push(user?.requestTo);
+            friend.friends.push(newRes?.requestTo)
             await friend.save();
         }
         const pendingRequests = await FriendRequest.find({
