@@ -14,7 +14,7 @@ const Home = () => {
   const {user, edit} = useSelector(state => state.user);
   const {posts} = useSelector(state => state.posts);
   const [friendRequest, setFriendRequest] = useState([]);
-  const [suggestedFriends, setsuggestedFriendst] = useState([]);
+  const [suggestedFriends, setsuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
@@ -73,7 +73,6 @@ const Home = () => {
         token: user?.token,
         method: "POST",
       });
-      console.log(res.data)
       setFriendRequest(res?.data);
     } catch (error) {
       console.log(error)
@@ -87,7 +86,7 @@ const Home = () => {
         token: user?.token,
         method: "POST",
       });
-      setsuggestedFriendst(res?.data);
+      setsuggestedFriends(res?.data);
     } catch (error) {
       console.log(error)
     }
@@ -225,14 +224,14 @@ const Home = () => {
                 }
               </div>
             </div>
-          {/* SUGGESTED FRIENDS   */}
+          {/* SUGGESTED FRIENDS */}
             <div className='w-full bg-primary shadow-sm rounded-lg px-5 py-5'>
               <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
                 <span>Friend Suggestion</span>
               </div>
               <div className='w-full flex flex-col gap-4 pt-4'>
                 {
-                  suggestedFriends?.map(( friend) =>(
+                  suggestedFriends?.map((friend) =>(
                     <div key={friend?._id} className='flex items-center justify-between'>
                       <Link to={`/profile/${friend?._id}`}  key={friend?._id} className='w-full flex items-center cursor-pointer gap-4'>
                         <img src={friend?.profileUrl ?? NoProfile} alt={friend?.firstName} className='w-10 h-10 object-cover rounded-full' />
