@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { NoProfile } from '../assets'
 import { BsFiletypeGif, BsPersonFillAdd } from 'react-icons/bs'
 import { BiImages, BiSolidVideo } from 'react-icons/bi'
-import { set, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { apiRequest, deletePost, fetchPosts, getUserInfo, handleFileUpload, likePost, sendFriendRequest } from '../utils'
 import { AddFriend, UserLogin } from '../redux/userSlice'
 
@@ -249,7 +249,7 @@ const Home = () => {
                       </Link>
                       <div className='flex gap-1'>
                         <button className='text-sm text-white p-1 rounded bg-[#0444a430]' onClick={()=>handleFriendRequest(friend?._id)}>
-                          <BsPersonFillAdd size={20} className='text-[#0f52b6]'/>
+                          <BsPersonFillAdd title='send friend request' size={20} className='text-[#0f52b6]'/>
                         </button>
                       </div>
                     </div>

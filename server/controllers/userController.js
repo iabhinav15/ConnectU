@@ -97,7 +97,7 @@ export const requestPasswordReset = async (req, res) => {
 export const resetPassword = async (req, res) => {
     const {userId, token} = req.params;
     try {
-        const user = await User.findById(userId);//error may be
+        const user = await User.findById(userId);
         if(!user){
             return res.status(404).json({
                 status: "FAILED",
@@ -129,7 +129,6 @@ export const resetPassword = async (req, res) => {
                 })
             }
             else{
-                // res.redirect(`/users/resetpassword?type=reset&id=${userId}`);
                 res.status(201).json({
                     status: "SUCCESS",
                     message: "Password reset link verified. Please enter your new password."
@@ -314,9 +313,10 @@ export const acceptRequest = async (req, res, next) => {
             return;
         }
         const newRes = await FriendRequest.findByIdAndUpdate({_id: rid}, {requestStatus: status}, {new: true});
-        console.log(newRes);
+        
+        let user;
         if(status === "Accepted"){
-            const user = await User.findById(id);
+            user = await User.findById(id);
             user.friends.push(newRes?.requestFrom);
             await user.save();
             const friend = await User.findById(newRes?.requestFrom);
@@ -338,7 +338,7 @@ export const acceptRequest = async (req, res, next) => {
             success: true,
             message: "Friend Request " + status,
             data: pendingRequests,
-            friend: newRes?.requestFrom
+            friend: user
         })
     } catch (error) {
         console.log(error);
@@ -360,7 +360,8 @@ export const removeFriend = async (req, res)=>{
         friend.friends.pull(userId);
         await user.save();
         await friend.save();
-        //write code to delete friendrequest data
+        await FriendRequest.findOneAndDelete({requestFrom:id,requestTo:userId});
+        await FriendRequest.findOneAndDelete({requestFrom:userId,requestTo:id})
         res.status(201).json({
             success: true,
             message: "Friend removed successfully.",

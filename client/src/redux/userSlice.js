@@ -20,7 +20,7 @@ const userSlice = createSlice({
         updateProfile: (state, action) => {
             state.edit = action.payload;
         },
-        addFriend: (state,action) => {
+        addFriend: (state, action) => {
             state.user.friends.push(action.payload);
         } 
     }
@@ -46,9 +46,8 @@ export function UpdateProfile(edit) {
     };
 }
 
-
 export function AddFriend(user) {
-    return (dispatch,getState) => {
+    return (dispatch, getState) => {
         dispatch(userSlice.actions.addFriend(user));
     }
 }

@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 
 const FriendsCard = ({friends}) => {
 
-  const {userId} = useSelector(state => state.user.user)
   const {user} = useSelector(state => state.user)
 
   const handleRemoveFriend = async (friendId) => {
@@ -18,7 +17,7 @@ const FriendsCard = ({friends}) => {
           url: "/users/remove-friend",
           token: user?.token,
           method: "POST",
-          data: { id: friendId, userId: userId },
+          data: { id: friendId, userId: user?.userId },
         });
         alert("Friend removed, Please refresh the page")
       }
@@ -35,7 +34,8 @@ const FriendsCard = ({friends}) => {
           <span>{friends?.length}</span>
         </div>
         <div className='w-full flex flex-col gap-4 pt-4'>
-          {friends?.map(friend => (
+          {friends?.map(friend => {
+            return (
             <div key={friend?._id} className='flex items-center justify-between'>
               <Link to={`/profile/${friend?._id}`} className='w-full flex items-center gap-4 cursor-pointer' >
               <img src={friend?.profileUrl ?? NoProfile} alt={friend?.firstName} className='w-10 h-10 rounded-full object-cover'/>
@@ -46,12 +46,12 @@ const FriendsCard = ({friends}) => {
               </Link>
               <div className='flex gap-1'>
                 <button className='text-sm text-white p-1 rounded bg-[#0444a430]' onClick={()=>handleRemoveFriend(friend._id)}>
-                  <BsPersonFillDash size={20} className='text-[#0f52b6]'/>
+                  <BsPersonFillDash title='Remove friend' size={20} className='text-[#0f52b6]'/>
                 </button>
               </div>
             </div>
-          ))}
-
+          )})
+          }
         </div>
       </div>
     </div>

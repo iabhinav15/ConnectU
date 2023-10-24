@@ -53,8 +53,8 @@ const Profile = () => {
           </div>
         </div>
         {/* CENTER */}
-        <div className='flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto'>
-          {/* yaha sirf tumhara post aayega na kyon ki tumhara profile hai */}
+        <div className='flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
+          {/* yaha sirf tumhara post aayega kyon ki tumhara profile hai */}
           {
             loading ? (<Loading />) : posts?.length > 0 ? (
               posts?.map((post) => ( <PostCard key={post?._id} post={post} user={user} deletePost={handleDelete} likePost={handleLikePost} /> ))) : (

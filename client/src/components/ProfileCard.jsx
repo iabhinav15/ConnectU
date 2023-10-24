@@ -29,7 +29,7 @@ const ProfileCard = ({user}) => {
                     </Link>
 
                     <div>
-                        {user?._id === data?._id ? (<LiaEditSolid size={20}
+                        {user?._id === data?._id ? (<LiaEditSolid title='Edit Profile' size={20}
                         className='cursor-pointer text-blue' onClick={() => dispatch(UpdateProfile(true))}/>) : (<button className='text-sm text-white p-1 rounded bg-[#0444a430]' onClick={()=> {}}>
                             <BsPersonFillAdd size={20} className='text-[#0f52b6]'/>
                         </button>)}

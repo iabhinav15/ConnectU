@@ -129,7 +129,6 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
         setReplyComments(0);
         const result = await getPostComments(id,userData.token);
         setComments(result);
-        console.log(result)
         setLoading(false);
     };
     const handleLike = async (uri) => {
@@ -141,7 +140,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
             <div className='flex gap-3 items-center mb-2'>
                 <Link to={`/profile/${post?.userId?._id}`} className='w-10 h-10 rounded-full overflow-hidden'>
                     <img src={post?.userId?.profileUrl ?? NoProfile} alt={post?.userId?.firstName} className='w-12 h-12 md:w-14 md:h-14 object-cover rounded-full' />
-                </Link>
+                </Link>     
                 <div className='w-full flex justify-between'>
                     <div className=''>
                         <Link to={`/profile/${post?.userId?._id}`} className='text-base font-medium text-ascent-1'>
@@ -171,7 +170,6 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                             </span>
                         )
                         : (
-                            // yaha logic kya hai
                             <span className='text-blue ml-2 font-medium cursor-pointer' onClick={()=>setShowAll(post?._id)}>Show more</span>
                         ))}
                 </p>
@@ -212,7 +210,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                         {
                            loading? (<Loading/>) : comments?.length > 0 ? (
                             comments?.map((comment) => (
-                                <div className='w-full py-2' key={comments?._id}>
+                                <div className='w-full py-2' key={comment?._id}>
                                     <div className='flex gap-3 items-center mb-1 '>
                                         <Link to={"/profile/" + comment?.userId._id}>
                                             <img src={comment?.userId?.profileUrl ?? NoProfile} alt={comment?.userId?.firstName} className='w-10 h-10 object-cover rounded-full' />
