@@ -1,0 +1,29 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: server
+    src: ./
+    engine: nodejs16
+    primary: true
+    public: true
+    presets:
+      env:
+        - name: MONGODB_URL
+          description: "MongoDB URL"
+        - name: JWT_SECRET_KEY
+          description: "JWT secret key"
+        - name: JWT_EXPIRES_IN
+          description: "JWT token expiration time"
+        - name: EMAIL
+          description: "Email Id to send email to users"
+        - name: REFRESH_TOKEN
+          description: "Refresh token"
+        - name: CLIENT_SECRET
+          description: "Client secret"
+        - name: CLIENT_ID
+          description: "Client id"
+        - name: APP_URL
+          description: "app url"
+
+
+
