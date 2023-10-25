@@ -4,18 +4,48 @@ import {v4 as uuidv4} from 'uuid';
 import { Verification } from '../models/emailVerification.js';
 import { hashString } from './index.js';
 import { PasswordReset } from '../models/PasswordReset.js';
+import {google} from 'googleapis'
+
+const OAuth2 = google.auth.OAuth2
 
 dotenv.config();
-const { SMPT_HOST, SMPT_PORT, SMPT_MAIL, SMPT_PASSWORD,  APP_URL} = process.env;
+const { EMAIL, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, APP_URL } = process.env;
 
-var transporter = nodemailer.createTransport({
-    host: SMPT_HOST,
-    port: SMPT_PORT,
-    auth: {
-        user: SMPT_MAIL,//sender email
-        pass: SMPT_PASSWORD,//sender password
-    }
-});
+const createTransporter = async () => {
+    const oauth2Client = new OAuth2(
+        CLIENT_ID,
+        CLIENT_SECRET,
+        "https://developers.google.com/oauthplayground"
+    );
+    oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+    const accessToken = await new Promise((resolve, reject) => {
+        oauth2Client.getAccessToken((err, token) => {
+            if (err) {
+                reject("Failed to create access token :(");
+            }
+            resolve(token);
+        });
+    });
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            type: "OAuth2",
+            user: EMAIL,
+            accessToken,
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            refreshToken: REFRESH_TOKEN,
+        },
+    });
+    return transporter;
+}
+
+const sendEmail = async (emailOptions) => {
+    const transporter = await createTransporter();
+    await transporter.sendMail(emailOptions);
+}
 
 export const sendVerificationEmail = async (user, res) => {
   
@@ -25,7 +55,7 @@ export const sendVerificationEmail = async (user, res) => {
     const link = `${APP_URL}/users/verify/${_id}/${token}`;
     //mail options
     const mailOptions = {
-        from: SMPT_MAIL,
+        from: EMAIL,
         to: email,
         subject: 'Verify your email',
         html: `<p>Hi ${user.lastName},</p>
@@ -47,7 +77,7 @@ export const sendVerificationEmail = async (user, res) => {
             expiresAt: Date.now() + 3600000,
         });
         if(newVerifiedEmail) {
-            transporter.sendMail(mailOptions).then(() => {
+            sendEmail(mailOptions).then(() => {
                 res.status(201).send({
                     success: "Pending",
                     message: `A verification email has been sent to ${email}.`,
