@@ -7,10 +7,10 @@ export const createPost = async (req, res, next) => {
     try {
         const {userId} = req.body.user;
         const { description, image} = req.body;
-        if(!description){
-            next("Description is required");
-            return;
-        }
+        // if(!description){
+        //     next("Description is required");
+        //     return;
+        // }
 
         const post = await Post.create({description, image, userId});
 
@@ -22,7 +22,7 @@ export const createPost = async (req, res, next) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({message: error.message });
+        res.status(404).json({message: error.message, hello: "hello" });
     }
 };
 //get posts
@@ -35,7 +35,7 @@ export const getPosts = async (req, res, next) => {
         const friends = user?.friends?.toString().split(",")?? [];
         friends.push(userId);
         
-        const searchPostQuery =  {
+        const searchPostQuery = {
             $or:[
                 {
                     description: {$regex: search, $options: "i"},
@@ -62,7 +62,7 @@ export const getPosts = async (req, res, next) => {
         }else{
             postsRes = posts;
         }
-
+        
         res.status(200).json({
             success: true,
             message: "Post fetched successfully",
@@ -123,7 +123,6 @@ export const getUserPost = async (req, res, next) => {
         console.log(error);
         res.status(404).json({message: error.message });
     }
-        
     
 };
 

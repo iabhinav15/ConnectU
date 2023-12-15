@@ -51,8 +51,8 @@ export const sendVerificationEmail = async (user, res) => {
   
     const {_id, email, lastName} = user;
     const token = _id + uuidv4();
-
-    const link = `${APP_URL}/users/verify/${_id}/${token}`;
+    
+    const link = `${APP_URL}/users/verify/${_id}/${token}`; 
     //mail options
     const mailOptions = {
         from: EMAIL,
@@ -94,11 +94,12 @@ export const sendVerificationEmail = async (user, res) => {
 export const resetPasswordLink = async (user, res) => {
     const {_id, email, lastName} = user;
     const token = _id + uuidv4();
-    const link = 'http://localhost:3000' + "/reset-password/" + _id + "/" + token;
+
+    const link = APP_URL + "/reset-password/" + _id + "/" + token;
 
     //mail options
     const mailOptions = {
-        from: SMPT_MAIL,
+        from: EMAIL,
         to: email,
         subject: 'Paaword Reset Link',
         html: `<p style="font-family: Arial, sans-sarif; font-size: 16px; color: #333;">Hi ${lastName},</p>
@@ -119,18 +120,19 @@ export const resetPasswordLink = async (user, res) => {
             expiresAt: Date.now() + 600000,
         });
         if(resetEmail) {
-            transporter.sendMail(mailOptions).then(() => {
+            sendEmail(mailOptions)
+            .then(() => {
                 res.status(201).send({
                     success: "Pending",
                     message: `A password reset link has been sent to ${email}.`,
                 });
             }).catch((err) => {
                 console.log(err)
-                res.status(404).json({ message: "something went wrong" });
+                res.status(404).json({ message: "something went wrong1" });
             });
         }
     } catch (error) {
         console.log(error);
-        res.status(404).json({ message: "something went wrong" });
+        res.status(404).json({ message: "something went wrong2" });
     }
 };

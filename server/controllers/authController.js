@@ -5,16 +5,20 @@ import { compareString } from '../utils/index.js';
 
 //register user
 export const register = async (req, res, next) => {
-    const { firstName, lastName, email, password } = req.body;
-
-     if(!firstName || !lastName || !email || !password) {
-        return next("Please provide all required fields");
-    }
-
     try {
+        const { firstName, lastName, email, password } = req.body;
+
+        if(!firstName || !lastName || !email || !password) {
+            return next("Please provide all required fields");
+        }
+
         const userExist = await User.findOne({ email });
-        if (userExist) {
+
+        if (userExist && userExist?.verified) {
             return next("User already exists");
+        }
+        else if(userExist && !(userExist?.verified)){
+            await User.deleteOne({ email });
         }
 
         const hashedPassword = await hashString(password);

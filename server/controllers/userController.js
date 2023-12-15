@@ -18,15 +18,25 @@ export const verifyEmail = async (req, res) => {
                     User.findOneAndDelete({_id: userId})
                     .then(() => {
                         const message = "Verification Token has expired.";
-                        res.redirect(`/users/verified?status=error&message=${message}`);
+                        // res.redirect(`/users/verified?status=error&message=${message}`);
+                        res.status(401).json({
+                            success: false,
+                            message
+                        })
                     })
                     .catch((err) => {
-                        res.redirect(`/users/verified?status=error&message=`);
+                        res.status(401).json({
+                            success: false,
+                            message: err.message
+                        })
                     })
                 })
                 .catch((error)=>{
                     console.log(error);
-                    res.redirect(`/users/verified?message=`);
+                    res.status(401).json({
+                        success: false,
+                        message: error.message
+                    })
                 })
             } 
             else{ 
@@ -38,32 +48,58 @@ export const verifyEmail = async (req, res) => {
                             Verification.findOneAndDelete({userId})
                             .then(() => {
                                 const message = "Your account has been verified successfully.";
-                                res.redirect(`/users/verified?status=success&message=${message}`); 
+                                // res.redirect(`/users/verified?status=success&message=${message}`);
+                                res.status(200).json({
+                                    success: true,
+                                    message
+                                }) 
+
                             })
                         }) 
                         .catch((error) => {
                             console.log(error);
                             const message = "Verification failed or link expired. Please try again.";
-                            res.redirect(`/users/verified?status=error&message=${message}`)
+                            // res.redirect(`/users/verified?status=error&message=${message}`)
+                            res.status(401).json({
+                                success: false,
+                                message: error.message
+                            })
+
                         })
                     }else{
                         //invalid token 
                         const message = "Verification failed or link expired. Please try again.";
-                        res.redirect(`/users/verified?status=error&message=${message}`)
+                        // res.redirect(`/users/verified?status=error&message=${message}`)
+                        res.status(401).json({
+                            success: false,
+                            message
+                        })
                     }
                 })
                 .catch((err) => {
                     console.log(err);
-                    res.redirect(`/users/verified?message=`)
+                    // res.redirect(`/users/verified?message=`)
+                    res.status(401).json({
+                        success: false,
+                        message: err.message
+                    })
                 })
             }
         }else{
             const message = "Invalid verification link. Please try again later.";
-            res.redirect(`/users/verified?status=error&message=${message}`)
+            // res.redirect(`/users/verified?status=error&message=${message}`)
+            res.status(401).json({
+                success: false,
+                message
+            })
         }
     }catch (error) {
         console.log(error.message);
-        res.redirect(`/users/verified?message=`)
+        // res.redirect(`/users/verified?message=`)
+        res.status(401).json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
@@ -100,14 +136,14 @@ export const resetPassword = async (req, res) => {
         const user = await User.findById(userId);
         if(!user){
             return res.status(404).json({
-                status: "FAILED",
+                status: "failed",
                 message: "Invalid password reset link. Please try again."
             })
         }
         const resetPassword = await PasswordReset.findOne({userId});
         if(!resetPassword){
             return res.status(404).json({
-                status: "FAILED",
+                status: "failed",
                 message: "Invalid password reset link. Please try again."
             })
         }
@@ -116,7 +152,7 @@ export const resetPassword = async (req, res) => {
         if(expiresAt < Date.now()){
             await PasswordReset.findOneAndDelete({userId});
             return res.status(404).json({
-                status: "FAILED",
+                status: "failed",
                 message: "Invalid password reset link. Please try again."
             })
         }
@@ -124,7 +160,7 @@ export const resetPassword = async (req, res) => {
             const isMatch = await compareString(token, resetToken);
             if(!isMatch){
                 return res.status(404).json({
-                    status: "FAILED",
+                    status: "failed",
                     message: "Invalid password reset link. Please try again."
                 })
             }
@@ -137,7 +173,7 @@ export const resetPassword = async (req, res) => {
         }
     }catch (error) {
         console.log(error);
-        res.status(404).json({message: error.message})
+        res.status(404).json({status: "failed", message: error.message})
     }
 };
 
@@ -151,13 +187,13 @@ export const changePassword = async (req, res) => {
            await PasswordReset.findOneAndDelete({userId});
             res.status(201).json({
                 status: "SUCCESS",
-                message: "Password reset successful. Please login with your new password."
+                message: "Password reset successful. Login with your new password."
             })
         }
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({message: error.message})
+        res.status(404).json({status: "failed", message: error.message})
     }
 }
 
@@ -192,7 +228,7 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const {firstName, lastName, location,    profileUrl, profession} = req.body;
+        const {firstName, lastName, location, profileUrl, profession} = req.body;
         if(!firstName || !lastName || !location || !profession){
             next("Please Provide all required fields");
             return;
@@ -285,8 +321,8 @@ export const getFriendRequest = async (req, res) => {
         .limit(10).sort({
             _id: -1
         })
-        console.log(userId);
-        console.log(request);
+        // console.log(userId);
+        // console.log(request);
 
         res.status(200).json({
             success: true,
