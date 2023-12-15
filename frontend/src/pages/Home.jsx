@@ -28,7 +28,7 @@ const Home = () => {
     try {
       const uri = file && (await handleFileUpload(file));
       const description = data?.description.trim();
-      console.log(uri);
+      
       if(description === "" && !uri){
         setPosting(false);
         setError("description", {message:"You can not go empty🗑", type:"validate"})
@@ -155,14 +155,17 @@ const Home = () => {
         {/* CENTER */}
         <div className='h-full flex-1 px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <form onSubmit={handleSubmit(handlePostSubmit)} 
-          className='bg-primary px-4 rounded-lg'>
+          className='bg-primary px-4 rounded-lg'>   
             <div className='w-full flex items-center gap-2 py-4 border-b border-[#66666645]'>
               <img src={user?.profileUrl ?? NoProfile} alt="User Image" className='w-14 h-14 rounded-full object-cover' />
               <TextInput styles='w-full rounded-full py-5' placeholder="What's on your mind..." name='description' register={
                 register( 'description', {required: false})} 
                 error={errors.description?.message}
-              />
+              /> 
             </div>
+            {
+              file && <img src={URL.createObjectURL(file)} alt="media" className='m-auto mt-2' />
+            }
             {
               errMsg?.message && <span role='alert' className={`text-sm ${errMsg?.status === "failed" ? "text-[#f64949f3]" : "text:[#2ba150fe]"} mt-0.5`} >{errMsg?.message}</span>
             }

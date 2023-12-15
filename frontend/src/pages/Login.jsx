@@ -25,7 +25,7 @@ const Login = () => {
         data: data,
         method: 'POST',
       })
-      console.log(res);
+
       if(res?.status === 'failed'){
         setErrMsg(res);
       } else{
