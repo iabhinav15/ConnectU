@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FriendsCard, Loading, PostCard, ProfileCard, TopBar } from '../components';
-import { deletePost, fetchPosts, getUserInfo, likePost } from '../utils';
+import { deletePost, fetchPosts, getUserInfo, likePost, viewUserProfile } from '../utils';
 
 
 const Profile = () => {
@@ -15,7 +15,7 @@ const Profile = () => {
 
   const uri = "/posts/get-user-post/" + id;
 
-  const getUser = async ()=>{
+  const getUser = async () => {
     const res = await getUserInfo(user?.token, id);
     setUserInfo(res);
   }
@@ -32,11 +32,18 @@ const Profile = () => {
     await getPosts();
   };
 
+  const profileView = async () => {
+    if(id !== user._id) {
+      await viewUserProfile(user?.token, id);
+    }
+  }
+  
   useEffect(() => {
     setLoading(true);
     getUser();
     getPosts();
-   
+    profileView();
+  
   }, [id])
   
 
@@ -48,9 +55,9 @@ const Profile = () => {
         {/* LEFT */}
         <div className='hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto '>
           <ProfileCard user={userInfo} />
-          <div className='block lg:hidden'>
+          {/* <div className='block lg:hidden'>
             <FriendsCard friends={userInfo?.friends} />
-          </div>
+          </div> */}
         </div>
         {/* CENTER */}
         <div className='flex-1 h-full bg-primary px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>

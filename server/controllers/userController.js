@@ -417,12 +417,18 @@ export const profileViews = async (req, res, next) => {
         const {userId} = req.body.user;
         const {id} = req.body;
         const user = await User.findById(id);
-        user.views.push(userId);
-        await user.save();
+        if(!(user.views.includes(userId))){
+            user.views.push(userId);
+            await user.save();
 
-        res.status(201).json({
-            success: true,
-            message: "successfully",
+            return res.status(201).json({
+                success: true,
+                message: "successfully",
+            })
+        }
+        return res.status(401).json({
+            success: false,
+            message: "failed",
         })
     } catch (error) {
         console.log(error);

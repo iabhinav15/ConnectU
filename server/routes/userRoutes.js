@@ -18,6 +18,7 @@ router.put("/update-user", userAuth, updateUser);
 //friend requests routes
 router.post("/friend-request", userAuth, friendRequest);
 router.post("/get-friend-request", userAuth, getFriendRequest);
+
 //accept friend request or deny friend request
 router.post("/accept-request", userAuth, acceptRequest);
 router.post("/remove-friend", userAuth, removeFriend);
