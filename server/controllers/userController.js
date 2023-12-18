@@ -350,12 +350,12 @@ export const acceptRequest = async (req, res, next) => {
         }
         const newRes = await FriendRequest.findByIdAndUpdate({_id: rid}, {requestStatus: status}, {new: true});
         
-        let user;
+        let user, friend;
         if(status === "Accepted"){
             user = await User.findById(id);
             user.friends.push(newRes?.requestFrom);
             await user.save();
-            const friend = await User.findById(newRes?.requestFrom);
+            friend = await User.findById(newRes?.requestFrom);
             friend.friends.push(newRes?.requestTo)
             await friend.save();
         }
@@ -374,7 +374,7 @@ export const acceptRequest = async (req, res, next) => {
             success: true,
             message: "Friend Request " + status,
             data: pendingRequests,
-            friend: user
+            friend: friend
         })
     } catch (error) {
         console.log(error);
@@ -397,10 +397,11 @@ export const removeFriend = async (req, res)=>{
         await user.save();
         await friend.save();
         await FriendRequest.findOneAndDelete({requestFrom:id,requestTo:userId});
-        await FriendRequest.findOneAndDelete({requestFrom:userId,requestTo:id})
+        await FriendRequest.findOneAndDelete({requestFrom:userId,requestTo:id});
         res.status(201).json({
             success: true,
             message: "Friend removed successfully.",
+            removedFriend: friend
         })
     } catch (error) {
         console.log(error);

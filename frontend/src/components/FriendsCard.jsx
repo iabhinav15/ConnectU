@@ -3,23 +3,28 @@ import { Link, useParams } from 'react-router-dom'
 import { NoProfile } from '../assets'
 import { BsPersonFillDash } from 'react-icons/bs'
 import { apiRequest } from '../utils'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RemoveFriend } from '../redux/userSlice'
 
 const FriendsCard = ({friends}) => {
   const {id} = useParams();
   const {user} = useSelector(state => state.user)
+  const dispatch = useDispatch();
   
   const handleRemoveFriend = async (friendId) => {
     try {
-      const res = window.confirm("Are you sure you want to remove this friend?")
-      if (res) {
+      const isOk = window.confirm("Are you sure you want to remove this friend?")
+      if (isOk) {
         const res = await apiRequest({
           url: "/users/remove-friend",
           token: user?.token,
           method: "POST",
           data: { id: friendId, userId: user?.userId },
         });
-        alert("Friend removed, Please refresh the page")
+        if(res.success === true){
+          dispatch(RemoveFriend(res?.removedFriend));
+        }
+        alert("Friend removed successfully");
       }
     } catch (error) {
       console.log(error);
