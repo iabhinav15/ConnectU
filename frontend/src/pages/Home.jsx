@@ -14,6 +14,7 @@ const Home = () => {
   const {user, edit} = useSelector(state => state.user);
   const {posts} = useSelector(state => state.posts);
   const [friendRequest, setFriendRequest] = useState([]);
+  const [friendRequestsent, setFriendRequestsent] = useState([]);
   const [suggestedFriends, setsuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
@@ -83,7 +84,8 @@ const Home = () => {
         token: user?.token,
         method: "POST",
       });
-      setFriendRequest(res?.data);
+      setFriendRequest(res?.dataRec);
+      setFriendRequestsent(res?.dataSent);
     } catch (error) {
       console.log(error)
     }
@@ -101,6 +103,7 @@ const Home = () => {
       console.log(error)
     }
   };
+  
   const handleFriendRequest = async (id) => {
     try {
       const res = await sendFriendRequest(user.token, id);
@@ -110,6 +113,7 @@ const Home = () => {
       console.log(error.message);
     }
   };
+
   const acceptFriendRequest = async (id, status) => {
     try {
       const res = await apiRequest({
@@ -121,8 +125,22 @@ const Home = () => {
       setFriendRequest(res?.data);
       if(status !== 'Denied'){
         dispatch(AddFriend(res?.friend));
-        console.log("accept")
       } 
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeSentrequest = async (id) => {
+    try {
+      const res = await apiRequest({
+        url: "/users/remove-sentrequest",
+        token: user?.token,
+        method: "POST",
+        data: {rid: id},
+      });
+      setFriendRequestsent(res?.data);
+      // fetchSuggestedFriends();
     } catch (error) {
       console.log(error);
     }
@@ -140,6 +158,7 @@ const Home = () => {
     fetchPost();
     fetchFriendRequests();
     fetchSuggestedFriends();
+    setLoading(false);
   }, []);
 
   return (
@@ -204,7 +223,7 @@ const Home = () => {
         </div>
         {/* RIGHT */}
         <div className='hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto'>
-         {/* FRIEND REQUEST */}
+         {/* FRIEND REQUEST RECEIVED*/}
             <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
               <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
                 <span>Friend Request Received</span>
@@ -231,6 +250,38 @@ const Home = () => {
                         />
                         <CustomButton 
                           title='Deny' onClick={()=> acceptFriendRequest(_id, "Denied")} containerStyles='border border-[#666]  text-xs text-ascent-1 px-1.5 py-1 rounded-full'
+                        />
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          {/* FRIEND REQUEST SENT*/}  
+          <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
+              <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
+                <span>Friend Request Sent</span>
+                <span>{friendRequestsent?.length}</span>
+              </div>
+              <div className='w-full flex flex-col gap-4 pt-4'>
+                {
+                  friendRequestsent?.map(({ _id, requestTo: to } ) =>(
+                    <div key={_id} className='flex items-center justify-between'>
+                      <Link to={`/profile/${to._id}`} className='w-full flex  items-center cursor-pointer gap-4'>
+                        <img src={to?.profileUrl ?? NoProfile} alt="" className='w-10 h-10 rounded-full object-cover'/>
+                        <div className='flex-1'>
+                          <p className='text-base font-medium text-ascent-1'>
+                            {to?.firstName} {to?.lastName}
+                          </p>
+                          <span className='text-sm text-ascent-2'>
+                            {to?.profession ?? 'No Profession'}
+                          </span>
+                        </div>
+                      </Link>
+                      {/* there will be a button here which will cancel the request */}
+                      <div className='flex gap-1'>
+                        <CustomButton 
+                          title='remove' onClick={()=> {removeSentrequest(_id)}} containerStyles='border border-[#666] text-xs text-ascent-1 px-1.5 py-1 rounded-full'
                         />
                       </div>
                     </div>

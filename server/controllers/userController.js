@@ -311,7 +311,7 @@ export const friendRequest = async (req, res, next) => {
 export const getFriendRequest = async (req, res) => {
     try {
         const {userId} = req.body.user;
-        const request = await FriendRequest.find({
+        const requestRec = await FriendRequest.find({
             requestTo: userId,
             requestStatus: "pending"
         }).populate({
@@ -320,13 +320,51 @@ export const getFriendRequest = async (req, res) => {
         })
         .limit(10).sort({
             _id: -1
+        });
+
+        const requestSent = await FriendRequest.find({
+            requestFrom: userId,
+            requestStatus: "pending"
+        }).populate({
+            path: "requestTo",
+            select: "firstName lastName profileUrl profession"
         })
-        // console.log(userId);
-        // console.log(request);
+        .limit(10).sort({
+            _id: -1
+        })
 
         res.status(200).json({
             success: true,
-            data: request
+            dataRec: requestRec,
+            dataSent: requestSent
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "auth error",
+            success: false,
+            error: error.message
+        })
+    }
+};
+
+export const removeSentRequest = async (req, res, next) => {
+    try {
+        const {userId} = req.body.user;
+        const {rid} = req.body;
+        // const user = await User.findById(userId);
+        await FriendRequest.findByIdAndDelete(rid);
+        const pendingRequests = await FriendRequest.find({
+            requestFrom: userId,
+            requestStatus: "pending"
+        }).populate({
+            path: "requestTo",
+            select: "firstName lastName profileUrl profession"
+        })
+        res.status(201).json({
+            success: true,
+            message: "Friend Request removed successfully.",
+            data: pendingRequests
         })
     } catch (error) {
         console.log(error);
@@ -358,6 +396,9 @@ export const acceptRequest = async (req, res, next) => {
             friend = await User.findById(newRes?.requestFrom);
             friend.friends.push(newRes?.requestTo)
             await friend.save();
+        }
+        else {
+            await FriendRequest.findByIdAndDelete(rid);
         }
         const pendingRequests = await FriendRequest.find({
             requestTo: id,
@@ -447,11 +488,11 @@ export const suggestedFriends = async (req, res) => {
         let queryObject = {};
         queryObject._id = { $ne: userId };
         queryObject.friends = {$nin: userId};
-        let queryResult = User.find(queryObject).limit(15).select("firstName lastName profileUrl profession");
+        let queryResult = await User.find(queryObject).limit(15).select("firstName lastName profileUrl profession");
 
-        const suggestedFriends = await queryResult;
+        const suggestedFriends = queryResult;
 
-        res.status(200).json( {
+        res.status(200).json({
             success: true,
             data: suggestedFriends
         })

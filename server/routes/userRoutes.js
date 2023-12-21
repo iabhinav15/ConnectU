@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { acceptRequest, changePassword, friendRequest, getFriendRequest, getUser, profileViews, removeFriend, requestPasswordReset, resetPassword, suggestedFriends, updateUser, verifyEmail } from '../controllers/userController.js';
+import { acceptRequest, changePassword, friendRequest, getFriendRequest, getUser, profileViews, removeFriend, removeSentRequest, requestPasswordReset, resetPassword, suggestedFriends, updateUser, verifyEmail } from '../controllers/userController.js';
 import userAuth from '../middleware/authMiddleware.js';
 const router = express.Router();
 const __dirname = path.resolve(path.dirname(''));
@@ -22,6 +22,9 @@ router.post("/get-friend-request", userAuth, getFriendRequest);
 //accept friend request or deny friend request
 router.post("/accept-request", userAuth, acceptRequest);
 router.post("/remove-friend", userAuth, removeFriend);
+
+//remove sent friend request
+router.post("/remove-sentrequest", userAuth, removeSentRequest);
 
 //view profile
 router.post("/profile-view", userAuth, profileViews);
