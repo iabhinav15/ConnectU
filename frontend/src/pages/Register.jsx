@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { TextInput, Loading, CustomButton } from '../components'
 import { BgImage } from '../assets'
 import { BsShare } from 'react-icons/bs'
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { ImConnection } from 'react-icons/im'
 import { AiOutlineInteraction } from 'react-icons/ai'
 import { apiRequest } from '../utils'
@@ -13,6 +14,7 @@ const Register = () => {
   const { register, handleSubmit, getValues, formState: { errors } } = useForm({mode:'onChange'});
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
@@ -39,7 +41,11 @@ const Register = () => {
     finally{
       setIsSubmitting(false);
     }
-  }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   return (
     <div className='bg-bgColor w-full h-[100vh] flex items-center justify-center p-6'>
@@ -78,21 +84,39 @@ const Register = () => {
               styles='w-full'
             />
             <div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-              <TextInput
-                name='password' placeholder='password' type='password'
-                label='Password' register={ register('password', {required: 'Password is required!'})} 
-                error={errors.password? errors.password.message : ""}
-                styles='w-full'
-              />
+              <div className='relative flex items-center gap-2'>
                 <TextInput
-                name='password' placeholder='Password' type='password'
-                label='Confirm Password' register={ register('cPassword', {validate: (value) => {
-                  const { password } = getValues();
-                  if(password !== value) return 'Passwords do not match!';
-                }} )}
-                error={errors.cPassword && errors.cPassword.type === 'validate' ? errors.cPassword?.message : ''}
-                styles='w-full'
-              />
+                  name='password' placeholder='password' type={isPasswordVisible ? 'text' : 'password'}
+                  label='Password' register={ register('password', {required: 'Password is required!'})} 
+                  error={errors.password? errors.password.message : ""}
+                  styles='w-full'
+                />
+                <button
+                  type='button'
+                  className='absolute top-11 right-4 transform -translate-y-1/64 cursor-pointer'
+                  onClick={togglePasswordVisibility}
+                >
+                  {isPasswordVisible ? <FaRegEyeSlash size={27} color={"#065ad8"} /> : <FaRegEye size={28} color={"#065ad8"}/>}
+                </button>
+              </div>
+              <div className='relative flex items-center gap-2'>
+                <TextInput
+                  name='password' placeholder='Password' type={isPasswordVisible ? 'text' : 'password'}
+                  label='Confirm Password' register={ register('cPassword', {validate: (value) => {
+                    const { password } = getValues();
+                    if(password !== value) return 'Passwords do not match!';
+                  }} )}
+                  error={errors.cPassword && errors.cPassword.type === 'validate' ? errors.cPassword?.message : ''}
+                  styles='w-full'
+                />
+                <button
+                  type='button'
+                  className='absolute top-11 right-4 transform -translate-y-1/64 cursor-pointer'
+                  onClick={togglePasswordVisibility}
+                >
+                  {isPasswordVisible ? <FaRegEyeSlash size={27} color={"#065ad8"} /> : <FaRegEye size={28} color={"#065ad8"}/>}
+                </button>
+              </div>
             </div>
 
           {

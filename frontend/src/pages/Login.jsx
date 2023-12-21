@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { TextInput, Loading, CustomButton } from '../components'
 import { BgImage } from '../assets'
 import { BsShare } from 'react-icons/bs'
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { ImConnection } from 'react-icons/im'
 import { AiOutlineInteraction } from 'react-icons/ai'
 import { apiRequest } from '../utils'
@@ -15,6 +16,7 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({mode:'onChange'});
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
@@ -40,7 +42,11 @@ const Login = () => {
       console.log(error);
       setIsSubmitting(false);
     }
-  }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   return (
     <div className='bg-bgColor w-full h-[100vh] flex items-center justify-center p-6'>
@@ -65,13 +71,22 @@ const Login = () => {
               styles='w-full rounded-full'
               labelStyles='ml-2'
             />
-            <TextInput
-              name='password' placeholder='password' type='password'
-              label='password' register={ register('password', {required: 'Password is required!'})} 
-              error={errors.password? errors.password.message : ""}
-              styles='w-full rounded-full'
-              labelStyles='ml-2'
-            />
+            <div className='relative flex items-center gap-2'>
+              <TextInput
+                name='password' placeholder='password' type={isPasswordVisible ? 'text' : 'password'}
+                label='password' register={ register('password', {required: 'Password is required!'})} 
+                error={errors.password? errors.password.message : ""}
+                styles='w-full rounded-full'
+                labelStyles='ml-2'
+              />
+              <button
+                type='button'
+                className='absolute top-11 right-4 transform -translate-y-1/64 cursor-pointer'
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? <FaRegEyeSlash size={30} color={"#065ad8"} /> : <FaRegEye size={30} color={"#065ad8"}/>}
+              </button>
+            </div>
           <Link to='/reset-password' className='text-sm text-right text-blue font-semibold'>
             Forgot Password?
           </Link>
