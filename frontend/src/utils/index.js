@@ -134,4 +134,4 @@ export const viewUserProfile = async (token, id) => {
     } catch (error) {
         console.log(error)
     }
-}
+};

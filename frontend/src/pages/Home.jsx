@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {CustomButton, Loading, TextInput, TopBar, ProfileCard, FriendsCard, PostCard, EditProfile } from '../components'
+import {CustomButton, Loading, TextInput, TopBar, ProfileCard, FriendsCard, PostCard, EditProfile, ConfirmAction } from '../components'
 import { Link } from 'react-router-dom'
 import { NoProfile } from '../assets'
 import { BsFiletypeGif, BsPersonFillAdd } from 'react-icons/bs'
@@ -20,6 +20,8 @@ const Home = () => {
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState(null);
   const dispatch = useDispatch();
   const { register, reset, handleSubmit, formState: { errors }, setError } = useForm();
 
@@ -70,12 +72,23 @@ const Home = () => {
     await fetchPost();
   };
 
-  const handleDelete = async (id) => {
-    await deletePost(id, user.token);
-    alert("post deleted");
-    //create a modal window to confirm to delete post
-    await fetchPost();
+  const confirmDelete = async (status) => {
+    setShowModal(false);
+    if(status){
+      await deletePost(postIdToDelete, user.token);
+      await fetchPost();
+      // alert("Post deleted");
+    }
+  };
+  
+  const handleDelete = (id) => {
+    setShowModal(true);
+    setPostIdToDelete(id);
   }; 
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
   
   const fetchFriendRequests = async () => {
     try {
@@ -322,6 +335,7 @@ const Home = () => {
       </div>
     </div>
     { edit && <EditProfile />}
+    { showModal && <ConfirmAction closeModal={closeModal} confirmDelete={confirmDelete} />}
     </>
   )
 }

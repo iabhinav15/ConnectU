@@ -99,7 +99,7 @@ const EditProfile = () => {
                     </label>
                     { errMsg?.message && <span role='alert' className={`text-sm ${errMsg?.status === "failed" ? "text-[#f64949fe]" : "text:[#2ba150fe]"} mt-0.5`} >{errMsg?.message}</span> }
                      <div className='py-5 sm:flex sm:flex-row-reverse border-t border-[#66666645]'>
-                    { isSubmitting ? <Loading /> : <CustomButton type='submit' title='Submit' containerStyles='inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none`'/> }
+                    { isSubmitting ? <Loading /> : <CustomButton type='submit' title='Submit' containerStyles='inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none'/> }
                     </div>
             </form>
             </div>
