@@ -7,7 +7,7 @@ import { BsFiletypeGif, BsPersonFillAdd } from 'react-icons/bs'
 import { BiImages, BiSolidVideo } from 'react-icons/bi'
 import { useForm } from 'react-hook-form'
 import { apiRequest, deletePost, fetchPosts, getUserInfo, handleFileUpload, likePost, sendFriendRequest } from '../utils'
-import { AddFriend, UserLogin } from '../redux/userSlice'
+import { AddFriend, RemoveFriend, UserLogin } from '../redux/userSlice'
 
 
 const Home = () => {
@@ -22,6 +22,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState(null);
+  const [showModalunfriend, setShowModalunfriend] = useState(false);
+  const [friendIdToRemove, setFriendIdToRemove] = useState(false);
   const dispatch = useDispatch();
   const { register, reset, handleSubmit, formState: { errors }, setError } = useForm();
 
@@ -72,13 +74,12 @@ const Home = () => {
     await fetchPost();
   };
 
-  const confirmDelete = async (status) => {
+  const confirmDelete = async () => {
     setShowModal(false);
-    if(status){
-      await deletePost(postIdToDelete, user.token);
-      await fetchPost();
-      // alert("Post deleted");
-    }
+    await deletePost(postIdToDelete, user.token);
+    setPostIdToDelete(null);
+    await fetchPost();
+    // alert("Post deleted");
   };
   
   const handleDelete = (id) => {
@@ -88,6 +89,7 @@ const Home = () => {
 
   const closeModal = () => {
     setShowModal(false);
+    setShowModalunfriend(false);
   };
   
   const fetchFriendRequests = async () => {
@@ -144,6 +146,33 @@ const Home = () => {
     }
   };
 
+  const handleRemoveFriend = (friendId) => {
+    setShowModalunfriend(true);
+    setFriendIdToRemove(friendId);
+  };
+
+  const confUnfriend = async () => {
+    setShowModalunfriend(false);
+    try {
+      const res = await apiRequest({
+        url: "/users/remove-friend",
+        token: user?.token,
+        method: "POST",
+        data: { id: friendIdToRemove, userId: user?.userId },
+      });
+      if(res.success === true){
+        dispatch(RemoveFriend(res?.removedFriend));
+      }
+      // alert("Friend removed successfully");
+
+    } catch (error) {
+      console.log(error);
+    }
+    finally{
+      setFriendIdToRemove(null);
+    }
+  };
+
   const removeSentrequest = async (id) => {
     try {
       const res = await apiRequest({
@@ -153,7 +182,6 @@ const Home = () => {
         data: {rid: id},
       });
       setFriendRequestsent(res?.data);
-      // fetchSuggestedFriends();
     } catch (error) {
       console.log(error);
     }
@@ -182,7 +210,7 @@ const Home = () => {
         {/* LEFT */}
         <div className='hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto '>
           <ProfileCard user={user}/>
-          <FriendsCard friends={user?.friends}/>
+          <FriendsCard friends={user?.friends} handleRemoveFriend={handleRemoveFriend}/>
         </div>
         {/* CENTER */}
         <div className='h-full flex-1 px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
@@ -335,7 +363,9 @@ const Home = () => {
       </div>
     </div>
     { edit && <EditProfile />}
-    { showModal && <ConfirmAction closeModal={closeModal} confirmDelete={confirmDelete} />}
+    { showModal && <ConfirmAction closeModal={closeModal} confirmDelete={confirmDelete} action="Do you want to delete the post?" />}
+    {showModalunfriend && <ConfirmAction closeModal={closeModal} confUnfriend={confUnfriend} action="Do you want to unfriend?" />}
+    {/* Don't chanhe the action value above bcz it is being used in ConfirmAction compnt */}
     </>
   )
 }

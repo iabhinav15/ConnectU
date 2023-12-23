@@ -6,30 +6,10 @@ import { apiRequest } from '../utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RemoveFriend } from '../redux/userSlice'
 
-const FriendsCard = ({friends}) => {
+const FriendsCard = ({friends, handleRemoveFriend}) => {
   const {id} = useParams();
   const {user} = useSelector(state => state.user)
   const dispatch = useDispatch();
-  
-  const handleRemoveFriend = async (friendId) => {
-    try {
-      const isOk = window.confirm("Are you sure you want to remove this friend?")
-      if (isOk) {
-        const res = await apiRequest({
-          url: "/users/remove-friend",
-          token: user?.token,
-          method: "POST",
-          data: { id: friendId, userId: user?.userId },
-        });
-        if(res.success === true){
-          dispatch(RemoveFriend(res?.removedFriend));
-        }
-        alert("Friend removed successfully");
-      }
-    } catch (error) {
-      console.log(error);
-    } 
-  }
 
   return (
     <div>

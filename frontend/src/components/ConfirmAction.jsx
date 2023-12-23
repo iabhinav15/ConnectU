@@ -1,7 +1,7 @@
 import React from 'react'
 import { MdClose } from 'react-icons/md'
 
-const ConfirmAction = ({closeModal, confirmDelete}) => {
+const ConfirmAction = ({closeModal, confirmDelete, action, confUnfriend}) => {
 
   return (
     <>
@@ -14,13 +14,13 @@ const ConfirmAction = ({closeModal, confirmDelete}) => {
             <div className='inline-block align-bottom bg-primary rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full' role='dialog' aria-modal='true' aria-labelledby='modal-headline'>
                 <div className='pt-3 pb-2 px-6'>
                     <div className='flex justify-between mb-12'>
-                        <label htmlFor="name" className='block font-medium text-xl text-ascent-1 text-left'>Do you want to delete the post?</label>
+                        <label htmlFor="name" className='block font-medium text-xl text-ascent-1 text-left'>{action}</label>
                         <button type='button' className='text-ascent-1' onClick={closeModal}>
                             <MdClose size={22} />
                         </button>
                     </div>
                     <div className='flex gap-8 justify-end mb-2'>
-                        <button type='button' className=' bg-blue px-3 py-2 rounded-md font-medium text-white outline-none' onClick={()=>{confirmDelete(true)}}>
+                        <button type='button' className=' bg-blue px-3 py-2 rounded-md font-medium text-white outline-none' onClick={action === "Do you want to delete the post?" ? confirmDelete : confUnfriend}>
                             YES
                         </button>
                         <button type='button' className='text-ascent-1 px-3 py-2 rounded-md font-medium bg-bgColor' onClick={closeModal}>
