@@ -17,15 +17,9 @@ const ResetPassword = () => {
         data: data,
         method: 'POST',
       })  
-
-      if(res?.status === 'failed'){
-        setErrMsg(res);
-      }
-      else{
-        setErrMsg(res);
-      }
+      setErrMsg(res);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
     finally{
       setIsSubmitting(false);
@@ -51,7 +45,7 @@ const ResetPassword = () => {
               labelStyles='ml-2'
           />            
           {
-            errMsg?.message && (<span role='alert' className={`text-sm ${errMsg?.status === 'failed' ? 'text-[#f64949fe]' :'text-[#2ba150fe]' } mt-0.5`}>{errMsg?.message}</span>)
+            errMsg?.message && (<span role='alert' className={`text-sm ${errMsg?.status === false ? 'text-[#f64949fe]' :'text-[#2ba150fe]' } mt-0.5`}>{errMsg?.message}</span>)
           }
           {
             isSubmitting ? <Loading /> : <CustomButton type='submit' containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none `} title='Submit'/>

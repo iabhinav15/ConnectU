@@ -58,6 +58,9 @@ export const sendVerificationEmail = async (user, res) => {
         from: EMAIL,
         to: email,
         subject: 'Verify your email',
+        // Below is text version of email 
+        // Text: `Hi ${user.lastName}`
+        // Below is html version of email
         html: `<p>Hi ${user.lastName},</p>
         <p>Thanks for registering on our website.</p>
         <p>Please click on the link below to verify your email address:</p>
@@ -123,16 +126,18 @@ export const resetPasswordLink = async (user, res) => {
             sendEmail(mailOptions)
             .then(() => {
                 res.status(201).send({
-                    success: "Pending",
+                    status: "Pending",
                     message: `A password reset link has been sent to ${email}.`,
                 });
             }).catch((err) => {
                 console.log(err)
-                res.status(404).json({ message: "something went wrong1" });
+                res.status(404).json({ status: false, message: "something went wrong" });
             });
         }
     } catch (error) {
         console.log(error);
-        res.status(404).json({ message: "something went wrong2" });
+        res.status(404).json({ 
+            status: false,
+            message: "something went wrong" });
     }
 };

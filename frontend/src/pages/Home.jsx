@@ -122,8 +122,9 @@ const Home = () => {
   const handleFriendRequest = async (id) => {
     try {
       const res = await sendFriendRequest(user.token, id);
-      await fetchSuggestedFriends();
       alert("friend request sent");
+      await fetchFriendRequests();
+      await fetchSuggestedFriends();
     } catch (error) {
       console.log(error.message);
     }
@@ -162,6 +163,7 @@ const Home = () => {
       });
       if(res.success === true){
         dispatch(RemoveFriend(res?.removedFriend));
+        await fetchSuggestedFriends();
       }
       // alert("Friend removed successfully");
 
@@ -182,6 +184,7 @@ const Home = () => {
         data: {rid: id},
       });
       setFriendRequestsent(res?.data);
+      await fetchSuggestedFriends();
     } catch (error) {
       console.log(error);
     }

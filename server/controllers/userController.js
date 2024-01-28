@@ -109,7 +109,7 @@ export const requestPasswordReset = async (req, res) => {
         const user = await User.findOne({email});
         if(!user){
             return res.status(404).json({
-                status: "FAILED",
+                status: false,
                 message: "Email address not found."
             })
         }
@@ -126,7 +126,7 @@ export const requestPasswordReset = async (req, res) => {
         await resetPasswordLink(user, res);
     } catch (error) {
         console.log(error);
-        res.status(404).json({message: error.message})
+        res.status(404).json({ status: false, message: error.message})
     }
 };
 
@@ -255,8 +255,6 @@ export const updateUser = async (req, res, next) => {
             user,
             token
         })
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({  
@@ -490,7 +488,12 @@ export const suggestedFriends = async (req, res) => {
         queryObject.friends = {$nin: userId};
         let queryResult = await User.find(queryObject).limit(15).select("firstName lastName profileUrl profession");
 
-        const suggestedFriends = queryResult;
+        const queryResult1 = await FriendRequest.find({ requestFrom: userId, requestStatus: "pending" });
+        const queryResult2 = await FriendRequest.find({ requestTo: userId, requestStatus: "pending" });
+        
+        const suggestedFriends = queryResult.filter((item) => {
+            return !queryResult1.some((item1) => item1.requestTo.toString() === item._id.toString()) && !queryResult2.some((item2) => item2.requestFrom.toString() === item._id.toString());
+        });
 
         res.status(200).json({
             success: true,
