@@ -1,3 +1,4 @@
 import NoProfile from "./userprofile.png";
 import BgImage from "./img.jpeg";
-export { NoProfile, BgImage };
+import googleLogo from "./google-logo.webp";
+export { NoProfile, BgImage, googleLogo };

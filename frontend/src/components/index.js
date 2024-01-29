@@ -7,4 +7,5 @@ import FriendsCard from "./FriendsCard";
 import PostCard from "./PostCard";
 import EditProfile from "./EditProfile";
 import ConfirmAction from "./ConfirmAction";
-export { TextInput, Loading, CustomButton, TopBar, ProfileCard, FriendsCard, PostCard, EditProfile, ConfirmAction };
+import LoginwithGoogle  from "./LoginwithGoogle";
+export { TextInput, Loading, CustomButton, TopBar, ProfileCard, FriendsCard, PostCard, EditProfile, ConfirmAction, LoginwithGoogle };

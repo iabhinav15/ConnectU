@@ -27,7 +27,7 @@ export const apiRequest = async ({method, url, data, token}) => {
     } catch (error) {
         const err = error.response.data;
         console.log(err);
-        return {status: err.success, message: err.message}//err.status or err.success
+        return { status: err.status, message: err.message };  
     }
 };
 
@@ -77,7 +77,7 @@ export const likePost = async ({token, uri}) => {
 
 export const deletePost = async (id, token) => {
     try {
-        const res = await apiRequest({
+        await apiRequest({
             url: "/posts/" + id,
             token: token,
             method: 'DELETE',
@@ -110,7 +110,7 @@ export const getUserInfo = async (token, id) => {
 
 export const sendFriendRequest = async (token, id) => {
     try {
-        const res = await apiRequest({
+        await apiRequest({
             url: "/users/friend-request/",
             token: token,
             method: 'POST',
@@ -124,7 +124,7 @@ export const sendFriendRequest = async (token, id) => {
 
 export const viewUserProfile = async (token, id) => {
     try {
-        const res = await apiRequest({
+        await apiRequest({
             url: "/users/profile-view/",
             token: token,
             method: 'POST',

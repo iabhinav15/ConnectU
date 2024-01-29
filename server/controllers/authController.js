@@ -1,7 +1,6 @@
 import {User} from '../models/userModel.js';
-import { createJWT, hashString } from '../utils/index.js';
+import { createJWT, hashString, compareString} from '../utils/index.js';
 import { sendVerificationEmail } from '../utils/sendEmail.js';
-import { compareString } from '../utils/index.js';
 
 //register user
 export const register = async (req, res, next) => {
@@ -47,7 +46,7 @@ export const login = async (req, res, next) => {
             select: "firstName lastName location profileUrl",
         });
         if (!user) {
-            return next("Invalid credentials1");
+            return next("Invalid credentials");
         }
         //check if user email is verified
         if (!user?.verified) {
@@ -72,4 +71,53 @@ export const login = async (req, res, next) => {
         res.status(404).json({ error: error.message });
     }
 };
-     
+
+//register with google
+export const googleDataHandler = async (req, res) => {
+    try {
+        const {googleUser} = req.body;
+        //check if user exists
+        const user = await User.findOne({ email: googleUser.email }).populate({
+            path: "friends",
+            select: "firstName lastName location profileUrl",
+        });
+        if (user) {
+            //if user exists
+            //check if user email is verified
+            if (!user?.verified) {
+                user.verified = googleUser.verified_email;
+            }
+            const token = createJWT(user?._id);
+            return res.status(200).json({ 
+                success: true,
+                message: "User logged in successfully",
+                user,
+                token 
+            });
+        } else {
+            //if user does not exist
+            //hash password
+            const hashedPassword = await hashString(googleUser.id);
+            //create user
+            console.log(googleUser, 'googleUser')
+            const newUser = await User.create({
+                firstName: googleUser.given_name,
+                lastName: googleUser.family_name,
+                email: googleUser.email,
+                password: hashedPassword,
+                profileUrl: googleUser.picture,
+                verified: googleUser.verified_email,
+            });
+            const token = createJWT(newUser?._id);
+            return res.status(201).json({ 
+                success: true,
+                message: "User registration successful",
+                user: newUser,
+                token 
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message, success: false});
+    }
+};

@@ -1,9 +1,7 @@
 import React from 'react';
 import {Outlet,  Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import {EnternewPassword, Home, Login, NotFound, Profile, Register, ResetPassword } from './pages';
+import {EmailVerification, EnternewPassword, GoogleRedirect, Home, Login, NotFound, Profile, Register, ResetPassword } from './pages';
 import { useSelector } from 'react-redux';
-import EmailVerification from './pages/EmailVerification';
-
 
 function Layout(){
   const {user} = useSelector(state => state.user);
@@ -30,6 +28,7 @@ function App() {
         <Route path='/login' element={<Login />}/>
         <Route path='/reset-password' element={<ResetPassword />}/>
         <Route path='/reset-password/:userId/:token' element={<EnternewPassword/>}/>
+        <Route path='/auth/register/google' element={<GoogleRedirect/>}/>
         <Route path='*' element={<NotFound />}/>
 
       </Routes>
