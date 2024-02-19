@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { TbSocial } from 'react-icons/tb'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -18,6 +18,10 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    alert("Use this to login:- email: yabhinav@gmail.com, password: 123456")
+  },[])
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);

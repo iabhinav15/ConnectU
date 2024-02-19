@@ -1,6 +1,6 @@
 # Connect-U
 
-**[A Social Media Platform](https://uconnect.netlify.app "Visit")**
+**[A Social Media Platform (Link to Visit)](https://uconnect.netlify.app "Visit")**
 
 ## Table of Contents
 - [Introduction](#introduction)
