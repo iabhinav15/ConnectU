@@ -22,7 +22,7 @@ export const createPost = async (req, res, next) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).json({message: error.message, hello: "hello" });
+        res.status(404).json({message: error.message });
     }
 };
 //get posts
