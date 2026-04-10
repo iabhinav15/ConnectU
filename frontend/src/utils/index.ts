@@ -2,7 +2,7 @@ import axios, { Method } from 'axios';
 import { SetPosts } from '../redux/postSlice';
 import { AppDispatch } from '../redux/store';
 
-const API_URL = process.env.REACT_APP_API_URL
+const API_URL = import.meta.env.VITE_API_URL
 
 export const API = axios.create({   
     baseURL: API_URL,
@@ -46,7 +46,7 @@ export const handleFileUpload = async(uploadFile: File) => {
     formData.append("upload_preset", "ConnectU-SocialMediaApp");
 
     try {
-        const response = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_ID}/image/upload`, formData);
+        const response = await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_ID}/image/upload`, formData);
 
         return response.data.secure_url;
     } catch (error) {

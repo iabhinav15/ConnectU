@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { CustomButton, Loading } from '../components';
 import { useParams } from 'react-router-dom';
 
-const BACKEND_URL = process.env.REACT_APP_API_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 const EmailVerification = () => {
     const { userId, token } = useParams<{ userId: string, token: string }>();

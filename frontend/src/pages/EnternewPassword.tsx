@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { TextInput, Loading, CustomButton } from '../components'
 import { useNavigate, useParams } from 'react-router-dom'
 
-const BACKEND_URL = process.env.REACT_APP_API_URL
+const BACKEND_URL = import.meta.env.VITE_API_URL
 
 const EnternewPassword = () => {
     const { userId, token } = useParams<{ userId: string, token: string }>();

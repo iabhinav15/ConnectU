@@ -15,9 +15,9 @@ const GoogleRedirect = () => {
             const url = "https://oauth2.googleapis.com/token";
             const values = {
                 code,
-                client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-                client_secret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
-                redirect_uri: process.env.REACT_APP_googleOAuthRedirectURL,
+                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                client_secret: import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
+                redirect_uri: import.meta.env.VITE_googleOAuthRedirectURL,
                 grant_type: "authorization_code",
             }
 
@@ -40,7 +40,7 @@ const GoogleRedirect = () => {
 
             //send user info to backend
             const resp = await axios.post(
-                `${process.env.REACT_APP_API_URL}/auth/data/google`,
+                `${import.meta.env.VITE_API_URL}/auth/data/google`,
                 { googleUser },
                 { withCredentials: true }
             );
