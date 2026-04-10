@@ -45,6 +45,7 @@ List of key features of the application:
 
 ## Technology Stack (MERN)
 
+- **TypeScript:** Superset of JavaScript that adds static typing to the language.
 - **React:** JavaScript library for building the user interface and front-end components.
 - **Redux:** State management library for managing and centralizing the application's state.
 - **Node.js:** JavaScript runtime for executing server-side code and managing dependencies.
