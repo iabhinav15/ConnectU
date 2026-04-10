@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {NoProfile} from '../assets';
@@ -8,11 +8,21 @@ import { BsBriefcase, BsInstagram, BsPersonFillAdd, BsFacebook } from 'react-ico
 import { CiLocationOn } from 'react-icons/ci';
 import { FaTwitterSquare } from 'react-icons/fa';
 import moment from 'moment';
+import AddSocialLink from './AddSocialLink';
 
 const ProfileCard = ({user}) => {
     const {user: data, edit} = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
+    const addLink = () => {
+        setOpen(true);
+    }
+    const closeModal = () => {
+        setOpen(false);
+    }
+
     return (
+    <>
         <div>
             <div className='w-full bg-primary flex flex-col items-center shadow-sm rounded-xl px-6 py-4'>
                 <div className='w-full flex items-center justify-between border-b pb-5 border-[#66666645]'>
@@ -66,22 +76,29 @@ const ProfileCard = ({user}) => {
                     </div>
                 </div>
                 <div className='w-full flex flex-col gap-4 py-4 pb-6 '>
-                    <p className='text-ascent-1 text-lg font-semibold'>Social Profile</p>
+                    <p className='text-ascent-1 text-lg font-semibold'>Add Links</p>
                     <div className='flex items-center gap-2 text-ascent-2'> 
                         <BsInstagram className='text-xl text-ascent-1'/>
                         <span>Instagram</span>
+                        <button className='text-ascent-1 text-base ml-auto' onClick={addLink}>Add </button>
                     </div>
                     <div className='flex gap-2 items-center text-ascent-2'>
                         <FaTwitterSquare className='text-xl text-ascent-1'/>
                         <span>Twitter</span>
+                        <button className='text-ascent-1 text-base ml-auto'>Add </button>
                     </div>
                     <div className='flex gap-2 items-center text-ascent-2'>
                         <BsFacebook className='text-xl text-ascent-1'/>
                         <span>Facebook</span>
+                        <button className='text-ascent-1 text-base ml-auto'>Add </button>
                     </div>
                 </div>
             </div>
         </div>
+        {
+            open && <AddSocialLink closeModal={closeModal}/>
+        }
+    </>
     )
 }
 

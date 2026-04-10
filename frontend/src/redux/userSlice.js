@@ -43,13 +43,14 @@ const userSlice = createSlice({
     },
    /* extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(fetchUserById.fulfilled, (state, action) => {
+        builder.addCase(apiData.fulfilled, (state, action) => {
           // Add user to the state array 'entities'
           state.entities.push(action.payload)
         })
     }*/
 });
 
+// export const { login, logout, updateProfile, addFriend, removeFriend  } = userSlice.actions //use this if you want to use the actions directly
 export default userSlice.reducer;
 
 export function UserLogin(user) {
